@@ -20,6 +20,12 @@
         <a v-if="is('admin')" class="navbar-item users" @click="$router.push('/users').catch(() => {})">
           {{ lang('Users') }}
         </a>
+        <a v-if="is('user')" class="navbar-item files" @click="$router.push('/').catch(() => {})">
+          {{ lang('Home') }}
+        </a>
+        <a v-if="is('user')" class="navbar-item files" @click="$router.push('/').catch(() => {})">
+          {{ lang('Guest') }}
+        </a>
         <a v-if="is('guest')" class="navbar-item login" @click="login">
           {{ lang('Login') }}
         </a>
@@ -78,6 +84,18 @@ export default {
         hasModalCard: true,
         component: Profile,
       })
+    },
+    switch() {
+      this.$store.commit('setGuestMode', !this.$store.state.guestmode)
+      api.changePathPrefix({
+        guestmode: this.$store.state.guestmode
+      })
+        .then(ret => {
+          this.$router.push('/').catch(() => {})
+        })
+        .catch(error => {
+          this.$store.commit('initialize')
+        })
     },
   }
 }

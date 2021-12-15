@@ -267,4 +267,15 @@ return [
             'read', 'write',
         ],
     ],
+    [
+        'route' => [
+            'POST', '/changepathprefix', '\Filegator\Controllers\FileController@changePathPrefix',
+        ],
+        'roles' => [
+            'user',
+        ],
+        'permissions' => [
+            'read'
+        ],
+    ],
 ];

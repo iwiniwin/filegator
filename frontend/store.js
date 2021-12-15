@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     initialized: false,
+    guestmode: false,
     config: [],
     user: {
       role: 'guest',
@@ -32,6 +33,7 @@ export default new Vuex.Store({
   mutations: {
     initialize(state) {
       state.initialized = true
+      state.guestmode = false
       this.commit('resetCwd')
       this.commit('resetTree')
       this.commit('destroyUser')
@@ -91,6 +93,9 @@ export default new Vuex.Store({
         }
       }
       traverse(state.tree)
+    },
+    setGuestMode(state, data) {
+      state.guestmode = data
     },
   },
   actions: {

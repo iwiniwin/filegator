@@ -211,6 +211,15 @@ const api = {
         .catch(error => reject(error))
     })
   },
+  changePathPrefix (params) {
+    return new Promise((resolve, reject) => {
+      axios.post('changepathprefix', {
+        guestmode: params.guestmode,
+      })
+        .then(res => resolve(res.data))
+        .catch(error => reject(error))
+    })
+  },
 }
 
 export default api

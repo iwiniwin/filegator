@@ -191,4 +191,15 @@ class FileController
 
         return $response->json('Done');
     }
+
+    public function changePathPrefix(Request $request, Response $response)
+    {
+        $guestmode = $request->input('guestmode');
+        if($guestmode) {
+            $this->storage->setPathPrefix($this->auth->getGuest()->getHomeDir());
+        } else {
+            $this->storage->setPathPrefix($user->getHomeDir());
+        }
+        return $response->json('Done');
+    }
 }
