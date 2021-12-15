@@ -23,6 +23,7 @@ class JsonFile implements Service, AuthInterface
 
     const SESSION_KEY = 'json_auth';
     const SESSION_HASH = 'json_auth_hash';
+    const SESSION_GUEST_MODE  = 'current_guest_mode';
 
     const GUEST_USERNAME = 'guest';
 
@@ -176,6 +177,21 @@ class JsonFile implements Service, AuthInterface
         }
 
         return $guest;
+    }
+
+    public function getUserByGuestMode(): User
+    {
+        $guestmode = $this->session->get(self::SESSION_GUEST_MODE, 0);
+        if ($guestmode == 1) {
+            return $this->getGuest();
+        } else {
+            return $this->user() ?: $this->getGuest();
+        }
+    }
+
+    public function setGuestMode($guestmode)
+    {
+        $this->session->set(self::SESSION_GUEST_MODE, $guestmode);
     }
 
     public function allUsers(): UsersCollection

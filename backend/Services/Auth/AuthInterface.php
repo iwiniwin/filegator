@@ -31,4 +31,8 @@ interface AuthInterface
     public function getGuest(): User;
 
     public function allUsers(): UsersCollection;
+
+    public function getUserByGuestMode(): User;
+
+    public function setGuestMode(($guestmode);
 }
