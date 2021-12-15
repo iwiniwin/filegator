@@ -195,6 +195,9 @@ export default {
     breadcrumbs() {
       let path = ''
       let breadcrumbs = [{name: this.lang('Home'), path: '/'}]
+      if(this.$store.state.guestmode) {
+        breadcrumbs = [{name: this.lang('Guest'), path: '/'}]
+      }
 
       _.forEach(_.split(this.$store.state.cwd.location, '/'), (dir) => {
         path += dir + '/'
