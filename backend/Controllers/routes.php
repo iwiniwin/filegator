@@ -269,7 +269,7 @@ return [
     ],
     [
         'route' => [
-            'POST', '/changepathprefix', '\Filegator\Controllers\FileController@changePathPrefix',
+            'POST', '/changeguestmode', '\Filegator\Controllers\FileController@changeGuestMode',
         ],
         'roles' => [
             'user',

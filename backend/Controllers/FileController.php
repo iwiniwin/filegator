@@ -22,6 +22,8 @@ class FileController
 {
     const SESSION_CWD = 'current_path';
 
+    const SESSION_GUEST_MODE  = 'current_guest_mode';
+
     protected $session;
 
     protected $auth;
@@ -192,14 +194,10 @@ class FileController
         return $response->json('Done');
     }
 
-    public function changePathPrefix(Request $request, Response $response)
+    public function changeGuestMode(Request $request, Response $response)
     {
         $guestmode = $request->input('guestmode');
-        if($guestmode) {
-            $this->storage->setPathPrefix($this->auth->getGuest()->getHomeDir());
-        } else {
-            $this->storage->setPathPrefix($user->getHomeDir());
-        }
+        $this->session->set(self::SESSION_GUEST_MODE, $guestmode);
         return $response->json('Done');
     }
 }

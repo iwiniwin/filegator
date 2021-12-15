@@ -211,9 +211,9 @@ const api = {
         .catch(error => reject(error))
     })
   },
-  changePathPrefix (params) {
+  changeGuestMode (params) {
     return new Promise((resolve, reject) => {
-      axios.post('changepathprefix', {
+      axios.post('changeguestmode', {
         guestmode: params.guestmode,
       })
         .then(res => resolve(res.data))

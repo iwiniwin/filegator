@@ -20,10 +20,10 @@
         <a v-if="is('admin')" class="navbar-item users" @click="$router.push('/users').catch(() => {})">
           {{ lang('Users') }}
         </a>
-        <a v-if="is('user')" class="navbar-item files" @click="changeGuestMode(false)">
+        <a v-if="is('user')" class="navbar-item files" @click="changeGuestMode(0)">
           {{ lang('Home') }}
         </a>
-        <a v-if="is('user')" class="navbar-item files" @click="changeGuestMode(true)">
+        <a v-if="is('user')" class="navbar-item files" @click="changeGuestMode(1)">
           {{ lang('Guest') }}
         </a>
         <a v-if="is('guest')" class="navbar-item login" @click="login">
@@ -87,7 +87,7 @@ export default {
     },
     changeGuestMode(guestmode) {
       this.$store.commit('setGuestMode', guestmode)
-      api.changePathPrefix({
+      api.changeGuestMode({
         guestmode: this.$store.state.guestmode
       })
         .then(() => {

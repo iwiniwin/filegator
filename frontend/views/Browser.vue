@@ -195,7 +195,7 @@ export default {
     breadcrumbs() {
       let path = ''
       let breadcrumbs = [{name: this.lang('Home'), path: '/'}]
-      if(this.$store.state.guestmode) {
+      if(this.$store.state.guestmode == 1) {
         breadcrumbs = [{name: this.lang('Guest'), path: '/'}]
       }
 
