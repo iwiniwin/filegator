@@ -86,9 +86,8 @@ export default {
       })
     },
     changeGuestMode(guestmode) {
-      this.$store.commit('setGuestMode', guestmode)
       api.changeGuestMode({
-        guestmode: this.$store.state.guestmode
+        guestmode: guestmode
       })
         .then(() => {
           this.$router.push('/').catch(() => {})

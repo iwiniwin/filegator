@@ -8,7 +8,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     initialized: false,
-    guestmode: 0,
     config: [],
     user: {
       role: 'guest',
@@ -92,9 +91,6 @@ export default new Vuex.Store({
         }
       }
       traverse(state.tree)
-    },
-    setGuestMode(state, data) {
-      state.guestmode = data
     },
   },
   actions: {

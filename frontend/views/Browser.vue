@@ -189,13 +189,14 @@ export default {
       files: [],
       hasFilteredEntries: false,
       showAllEntries: false,
+      guestmode: 0,
     }
   },
   computed: {
     breadcrumbs() {
       let path = ''
       let breadcrumbs = [{name: this.lang('Home'), path: '/'}]
-      if(this.$store.state.guestmode == 1) {
+      if(this.guestmode == 1) {
         breadcrumbs = [{name: this.lang('Guest'), path: '/'}]
       }
 
@@ -239,18 +240,26 @@ export default {
         })
     },
   },
+  created() {
+    resetGuestMode()
+  },
   mounted() {
     if (this.can('read')) {
       this.loadFiles()
     }
-    api.getGuestMode({
-      })
-        .then(ret => {
-          this.$store.commit('setGuestMode', ret)
-        })
-        .catch(error => this.handleError(error))
+  },
+  updated() {
+    resetGuestMode()
   },
   methods: {
+    resetGuestMode() {
+      api.getGuestMode({
+      })
+        .then(ret => {
+          this.guestmode = ret
+        })
+        .catch(error => this.handleError(error))
+    },
     toggleHidden() {
       this.showAllEntries = !this.showAllEntries
       this.loadFiles()
