@@ -77,6 +77,16 @@ export default {
   watch: {
     'files' (files) {
       _.forEach(files, file => {
+        let id = this.resumable.getOpt('generateUniqueIdentifier')(file)
+        let f = this.resumable.getFromUniqueIdentifier(id)
+        if (f) {
+          if (f.isComplete())
+          {
+            this.resumable.removeFile(f)
+          } else {
+            f.cancel()
+          }
+        }
         this.resumable.addFile(file)
       })
       if (files.length > 0) {
@@ -102,7 +112,12 @@ export default {
           queue: false,
           indefinite: true,
         })
-      }
+      },
+      generateUniqueIdentifier: (file) => {
+        var relativePath = file.webkitRelativePath||file.relativePath||file.fileName||file.name // Some confusion in different versions of Firefox
+        var size = file.size
+        return(size + '-' + relativePath.replace(/[^0-9a-zA-Z_-]/img, ''))
+      },
     })
 
     if (!this.resumable.support) {
