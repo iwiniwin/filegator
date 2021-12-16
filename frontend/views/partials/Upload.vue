@@ -34,12 +34,12 @@
             <div>
               <div>{{ file.relativePath != '/' ? file.relativePath : '' }}/{{ file.fileName }}</div>
               <div class="is-flex is-justify-between">
-                <progress :class="[file.file.uploadingError ? 'is-danger' : 'is-primary', 'progress is-large']" :value="file.size > 0 ? file.progress()*100 : 100" max="100" />
+                <progress :class="[file.file.uploadingError ? 'is-danger' : 'is-primary', 'progress is-small']" :value="file.size > 0 ? file.progress()*100 : 100" max="100" />
                 <a v-if="! file.isUploading() && file.file.uploadingError" class="progress-icon" @click="file.retry()">
-                  <b-icon icon="redo" type="is-danger" />
+                  <b-icon icon="redo" type="is-danger" size="is-small" />
                 </a>
                 <a v-else class="progress-icon" @click="file.cancel()">
-                  <b-icon :icon="file.isComplete() ? 'check' : 'times'" />
+                  <b-icon :icon="file.isComplete() ? 'check' : 'times'" size="is-small" />
                 </a>
               </div>
             </div>
@@ -202,17 +202,15 @@ export default {
   margin-left: 15px;
 }
 .progress-box {
-  position: fixed;
+  position: absolute;
   width: 100%;
-  bottom: -30px;
+  bottom: 0px;
   left: 0;
-  padding: 25px;
   max-height: 50%;
   z-index: 1;
 }
 .progress-items {
   overflow-y: scroll;
-  margin-right: -100px;
   padding-right: 100px;
   max-height: 300px; /* fix this */
 }
