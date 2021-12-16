@@ -272,7 +272,7 @@ return [
             'POST', '/changeguestmode', '\Filegator\Controllers\FileController@changeGuestMode',
         ],
         'roles' => [
-            'user',
+            'guest', 'user', 'admin',
         ],
         'permissions' => [
             'read'
@@ -283,7 +283,7 @@ return [
             'POST', '/getguestmode', '\Filegator\Controllers\FileController@getGuestMode',
         ],
         'roles' => [
-            'user',
+            'guest', 'user', 'admin',
         ],
         'permissions' => [
             'read'

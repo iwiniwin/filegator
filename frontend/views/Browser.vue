@@ -6,7 +6,7 @@
   >
     <div v-if="isLoading" id="loading" />
 
-    <Upload v-if="can('upload')" v-show="dropZone == false" :files="files" :drop-zone="dropZone" />
+    <Upload v-if="can('upload')" v-show="dropZone == false" :files="files" :drop-zone="dropZone" @clearFiles="files = []" />
 
     <b-upload v-if="dropZone && ! isLoading" multiple drag-drop>
       <b class="drop-info">{{ lang('Drop files to upload') }}</b>
@@ -37,7 +37,7 @@
         <section id="multi-actions" class="is-flex is-justify-between">
           <div>
             <b-field v-if="can('upload') && ! checked.length" class="file is-inline-block">
-              <b-upload multiple native @input="files = $event">
+              <b-upload multiple native v-model="files">
                 <a v-if="! checked.length" class="is-inline-block">
                   <b-icon icon="upload" size="is-small" /> {{ lang('Add files') }}
                 </a>

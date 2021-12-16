@@ -79,6 +79,9 @@ export default {
       _.forEach(files, file => {
         this.resumable.addFile(file)
       })
+      if (files.length > 0) {
+        this.$emit('clearFiles')
+      }
     },
   },
   mounted() {
