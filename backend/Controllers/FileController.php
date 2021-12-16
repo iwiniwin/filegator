@@ -198,4 +198,9 @@ class FileController
         $this->auth->setGuestMode($guestmode);
         return $response->json('Done');
     }
+
+    public function getGuestMode(Request $request, Response $response)
+    {
+        return $response->json($this->auth->getGuestMode());
+    }
 }

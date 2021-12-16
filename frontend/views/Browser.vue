@@ -243,6 +243,12 @@ export default {
     if (this.can('read')) {
       this.loadFiles()
     }
+    api.getGuestMode({
+      })
+        .then(ret => {
+          this.$store.commit('setGuestMode', ret)
+        })
+        .catch(error => this.handleError(error))
   },
   methods: {
     toggleHidden() {

@@ -278,4 +278,15 @@ return [
             'read'
         ],
     ],
+    [
+        'route' => [
+            'POST', '/getguestmode', '\Filegator\Controllers\FileController@getGuestMode',
+        ],
+        'roles' => [
+            'user',
+        ],
+        'permissions' => [
+            'read'
+        ],
+    ],
 ];

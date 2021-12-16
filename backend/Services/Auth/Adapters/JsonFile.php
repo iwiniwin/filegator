@@ -181,7 +181,7 @@ class JsonFile implements Service, AuthInterface
 
     public function getUserByGuestMode(): User
     {
-        $guestmode = $this->session->get(self::SESSION_GUEST_MODE, 0);
+        $guestmode = $this->getGuestMode();
         if ($guestmode == 1) {
             return $this->getGuest();
         } else {
@@ -192,6 +192,11 @@ class JsonFile implements Service, AuthInterface
     public function setGuestMode($guestmode)
     {
         $this->session->set(self::SESSION_GUEST_MODE, $guestmode);
+    }
+
+    public function getGuestMode(): int
+    {
+        return $this->session->get(self::SESSION_GUEST_MODE, 0);
     }
 
     public function allUsers(): UsersCollection

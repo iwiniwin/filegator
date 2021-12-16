@@ -33,7 +33,6 @@ export default new Vuex.Store({
   mutations: {
     initialize(state) {
       state.initialized = true
-      state.guestmode = 0
       this.commit('resetCwd')
       this.commit('resetTree')
       this.commit('destroyUser')
