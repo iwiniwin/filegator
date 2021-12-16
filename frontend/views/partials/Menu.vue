@@ -90,7 +90,7 @@ export default {
         guestmode: guestmode
       })
         .then(() => {
-          this.$router.push('/').catch(() => {})
+          this.$emit('changeGuestMode',guestmode)
         })
         .catch(error => {
           this.$store.commit('initialize')

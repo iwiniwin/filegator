@@ -13,7 +13,7 @@
     </b-upload>
 
     <div v-if="!dropZone" class="container">
-      <Menu />
+      <Menu @changeGuestMode="guestmode = $event" />
 
       <div id="browser">
         <div v-if="can('read')" class="is-flex is-justify-between">
@@ -221,11 +221,32 @@ export default {
   },
   watch: {
     '$route' (to) {
+      this.changeDir(to.query.cd)
+    },
+    guestmode: function () {
+      this.changeDir('/')
+    }
+  },
+  created() {
+    api.getGuestMode({
+    })
+      .then(ret => {
+        this.guestmode = ret
+      })
+      .catch(error => this.handleError(error))
+  },
+  mounted() {
+    if (this.can('read')) {
+      this.loadFiles()
+    }
+  },
+  methods: {
+    changeDir(cd) {
       this.isLoading = true
       this.checked = []
       this.currentPage = 1
       api.changeDir({
-        to: to.query.cd
+        to: cd
       })
         .then(ret => {
           this.$store.commit('setCwd', {
@@ -238,27 +259,6 @@ export default {
           this.isLoading = false
           this.handleError(error)
         })
-    },
-  },
-  created() {
-    resetGuestMode()
-  },
-  mounted() {
-    if (this.can('read')) {
-      this.loadFiles()
-    }
-  },
-  updated() {
-    resetGuestMode()
-  },
-  methods: {
-    resetGuestMode() {
-      api.getGuestMode({
-      })
-        .then(ret => {
-          this.guestmode = ret
-        })
-        .catch(error => this.handleError(error))
     },
     toggleHidden() {
       this.showAllEntries = !this.showAllEntries
