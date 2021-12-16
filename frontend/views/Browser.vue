@@ -13,7 +13,7 @@
     </b-upload>
 
     <div v-if="!dropZone" class="container">
-      <Menu @changeGuestMode="guestmode = $event" />
+      <Menu @changeGuestMode="onChangeGuestMode($event)" />
 
       <div id="browser">
         <div v-if="can('read')" class="is-flex is-justify-between">
@@ -225,7 +225,7 @@ export default {
     },
     guestmode: function () {
       this.changeDir('/')
-    }
+    },
   },
   created() {
     api.getGuestMode({
@@ -259,6 +259,11 @@ export default {
           this.isLoading = false
           this.handleError(error)
         })
+    },
+    onChangeGuestMode(guestmode)
+    {
+      this.guestmode = guestmode
+      this.goTo('/')
     },
     toggleHidden() {
       this.showAllEntries = !this.showAllEntries

@@ -33,7 +33,7 @@ class UploadController
         $this->auth = $auth;
         $this->tmpfs = $tmpfs;
 
-        $user = $this->auth->user() ?: $this->auth->getGuest();
+        $user = $this->auth->getUserByGuestMode();
 
         $this->storage = $storage;
         $this->storage->setPathPrefix($user->getHomeDir());
