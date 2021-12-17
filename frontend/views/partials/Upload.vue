@@ -77,16 +77,6 @@ export default {
   watch: {
     'files' (files) {
       _.forEach(files, file => {
-        let id = this.resumable.getOpt('generateUniqueIdentifier')(file)
-        let f = this.resumable.getFromUniqueIdentifier(id)
-        if (f) {
-          if (f.isComplete())
-          {
-            this.resumable.removeFile(f)
-          } else {
-            f.cancel()
-          }
-        }
         this.resumable.addFile(file)
       })
       if (files.length > 0) {
@@ -113,7 +103,10 @@ export default {
           indefinite: true,
         })
       },
-      generateUniqueIdentifier: (file) => {
+      generateUniqueIdentifier: (file, _, noCheck) => {
+        if (!noCheck) {
+          this.checkRepeatFile(file)
+        }
         var relativePath = file.webkitRelativePath||file.relativePath||file.fileName||file.name // Some confusion in different versions of Firefox
         var size = file.size
         return(size + '-' + relativePath.replace(/[^0-9a-zA-Z_-]/img, ''))
@@ -192,6 +185,18 @@ export default {
         this.resumable.pause()
         this.paused = true
       }
+    },
+    checkRepeatFile(file) {
+        let id = this.resumable.getOpt('generateUniqueIdentifier')(file, null, true)
+        let f = this.resumable.getFromUniqueIdentifier(id)
+        if (f) {
+          if (f.isComplete())
+          {
+            this.resumable.removeFile(f)
+          } else {
+            f.cancel()
+          }
+        }
     },
   },
 }
