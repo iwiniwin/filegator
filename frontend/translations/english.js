@@ -75,6 +75,9 @@ const data = {
   'Download permission': 'Download',
   'Guest': 'Guest',
   'Show hidden': 'Show hidden',
+  'File already exists': '{0} already exists',
+  'Overwrite': 'Overwrite',
+  'Use new name': 'Use new name',
 }
 
 export default data

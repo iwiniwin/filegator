@@ -111,6 +111,14 @@ export default {
         var size = file.size
         return(size + '-' + relativePath.replace(/[^0-9a-zA-Z_-]/img, ''))
       },
+      query: (file) => {
+        if (file.overwrite) {
+          return {
+            overwrite: true,
+          }
+        }
+        return {}
+      },
     })
 
     if (!this.resumable.support) {
@@ -124,16 +132,23 @@ export default {
     this.resumable.assignDrop(document.getElementById('dropzone'))
 
     this.resumable.on('fileAdded', (file) => {
-      this.visible = true
-      this.progressVisible = true
-
-      if(file.relativePath === undefined || file.relativePath === null || file.relativePath == file.fileName) file.relativePath = this.$store.state.cwd.location
-      else file.relativePath = [this.$store.state.cwd.location, file.relativePath].join('/').replace('//', '/').replace(file.fileName, '').replace(/\/$/, '')
-
-      if (!this.paused) {
-        this.resumable.upload()
+      if (this.checkExistFile(file)) {
+        this.$dialog.confirm({
+        message: this.lang('File already exists', file.fileName),
+        cancelText: this.lang('Use New Name'),
+        confirmText: this.lang('Overwrite'),
+        onConfirm: () => {
+          file.overwrite = true
+          this.onFileAdded(file)
+        },
+        onCancel: () => {
+          file.overwrite = false
+          this.onFileAdded(file)
+        },
+      })
+      } else {
+        this.onFileAdded(file)
       }
-
     })
 
     this.resumable.on('fileSuccess', (file) => {
@@ -187,16 +202,37 @@ export default {
       }
     },
     checkRepeatFile(file) {
-        let id = this.resumable.getOpt('generateUniqueIdentifier')(file, null, true)
-        let f = this.resumable.getFromUniqueIdentifier(id)
-        if (f) {
-          if (f.isComplete())
-          {
-            this.resumable.removeFile(f)
-          } else {
-            f.cancel()
-          }
+      let id = this.resumable.getOpt('generateUniqueIdentifier')(file, null, true)
+      let f = this.resumable.getFromUniqueIdentifier(id)
+      if (f) {
+        if (f.isComplete())
+        {
+          this.resumable.removeFile(f)
+        } else {
+          f.cancel()
         }
+      }
+    },
+    onFileAdded(file) {
+      this.visible = true
+      this.progressVisible = true
+
+      if(file.relativePath === undefined || file.relativePath === null || file.relativePath == file.fileName) file.relativePath = this.$store.state.cwd.location
+      else file.relativePath = [this.$store.state.cwd.location, file.relativePath].join('/').replace('//', '/').replace(file.fileName, '').replace(/\/$/, '')
+
+      if (!this.paused) {
+        this.resumable.upload()
+      }
+    },
+    checkExistFile(file)
+    {
+      let content = this.$store.state.cwd.content
+      for (var i = 0; i < content.length; i++) {
+        if (content[i].type == 'file' && content[i].name == file.fileName) {
+          return true
+        }
+      }
+      return false
     },
   },
 }

@@ -4,6 +4,7 @@ return [
     'public_path' => APP_PUBLIC_PATH,
     'public_dir' => APP_PUBLIC_DIR,
     'overwrite_on_upload' => false,
+    'allow_user_set_overwrite' => true,
     'timezone' => 'UTC', // https://www.php.net/manual/en/timezones.php
     'download_inline' => ['pdf'], // download inline in the browser, array of extensions, use * for all
 

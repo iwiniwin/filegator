@@ -64,8 +64,12 @@ class UploadController
         $identifier = (string) preg_replace('/[^0-9a-zA-Z_]/', '', (string) $request->input('resumableIdentifier'));
 
         $file = $request->files->get('file');
-
+        
         $overwrite_on_upload = (bool) $this->config->get('overwrite_on_upload', false);
+        $allow_user_set_overwrite = (bool) $this->config->get('allow_user_set_overwrite', false);
+        if ($allow_user_set_overwrite) {
+            $overwrite_on_upload = (bool) $request->input('overwrite', false);
+        }
 
         if (! $file || ! $file->isValid() || $file->getSize() > $this->config->get('frontend_config.upload_max_size')) {
             return $response->json('Bad file', 422);
