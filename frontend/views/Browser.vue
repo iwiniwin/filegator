@@ -432,12 +432,15 @@ export default {
       })
         .then(ret => {
           this.isLoading = false
-          this.$dialog.alert({
+          this.$dialog.confirm({
             message: this.lang('Your file is ready'),
             confirmText: this.lang('Download'),
+            cancelText: this.lang('Cancel'),
             onConfirm: () => {
               window.open(Vue.config.baseURL+'/batchdownload&uniqid='+ret.uniqid, '_blank')
-            }
+            },
+            onCancel: () => {
+            },
           })
         })
         .catch(error => {
