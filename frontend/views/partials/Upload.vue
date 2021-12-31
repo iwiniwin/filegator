@@ -71,7 +71,13 @@ export default {
   },
   computed: {
     activeUploads() {
-      return this.resumable.files.length > 0 && this.resumable.progress() < 1
+      for (var i = 0; i < this.resumable.files; i++) {
+        let file = this.resumable.files[i]
+        if (!file.isComplete()) {
+          return true
+        }
+      }
+      return false
     },
   },
   watch: {
