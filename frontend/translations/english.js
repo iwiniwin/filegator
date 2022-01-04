@@ -78,6 +78,9 @@ const data = {
   'File already exists': '{0} already exists',
   'Overwrite': 'Overwrite',
   'Use new name': 'Use new name',
+  'How do you want to download multiple files?': 'How do you want to download multiple files?',
+  'Download after archive': 'Download after archive',
+  'Download one by one': 'Download one by one',
 }
 
 export default data

@@ -58,7 +58,7 @@
 
               </b-dropdown>
             </a>
-            <a v-if="can('batchdownload') && checked.length" class="is-inline-block" @click="batchDownload">
+            <a v-if="can('batchdownload') && checked.length" class="is-inline-block" @click="multiDownload">
               <b-icon icon="download" size="is-small" /> {{ lang('Download') }}
             </a>
             <a v-if="can('write') && checked.length" class="is-inline-block" @click="copy">
@@ -402,6 +402,27 @@ export default {
         },
       })
     },
+    multiDownload() {
+      let items = this.getSelected()
+      if (items.length > 1)
+      {
+        this.$dialog.confirm({
+          message: this.lang('How do you want to download multiple files?'),
+          cancelText: this.lang('Download one by one'),
+          confirmText: this.lang('Download after archive'),
+          onConfirm: () => {
+            this.batchDownload()
+          },
+          onCancel: () => {
+            _.forEach(items, (item) => {
+              this.download(item)
+            })
+          },
+        })
+      } else {
+        this.download(items[0])
+      }
+    },
     batchDownload() {
       let items = this.getSelected()
 
@@ -411,12 +432,15 @@ export default {
       })
         .then(ret => {
           this.isLoading = false
-          this.$dialog.alert({
+          this.$dialog.confirm({
             message: this.lang('Your file is ready'),
             confirmText: this.lang('Download'),
+            cancelText: this.lang('Cancel'),
             onConfirm: () => {
               window.open(Vue.config.baseURL+'/batchdownload&uniqid='+ret.uniqid, '_blank')
-            }
+            },
+            onCancel: () => {
+            },
           })
         })
         .catch(error => {
