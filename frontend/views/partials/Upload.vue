@@ -9,7 +9,7 @@
                 <b-icon :icon="progressVisible ? 'angle-down' : 'angle-up'" />
               </a>
               <span v-if="activeUploads">
-                {{ lang('Uploading files', resumable.getSize() > 0 ? Math.round(resumable.progress()*100) : 100, formatBytes(resumable.getSize())) }}
+                {{ lang('Uploading files', Math.round(calcProgress()*100), formatBytes(resumable.getSize())) }}
               </span>
               <span v-if="activeUploads && paused">
                 ({{ lang('Paused') }})
@@ -34,7 +34,7 @@
             <div>
               <div>{{ file.relativePath != '/' ? file.relativePath : '' }}/{{ file.fileName }}</div>
               <div class="is-flex is-justify-between">
-                <progress :class="[file.file.uploadingError ? 'is-danger' : 'is-primary', 'progress is-small', 'progress-bar']" :value="file.size > 0 ? file.progress()*100 : 100" max="100" />
+                <progress :class="[file.file.uploadingError ? 'is-danger' : 'is-primary', 'progress is-small', 'progress-bar']" :value="file.size > 0 ? file.progress()*100 : (file.isComplete() ? 100 : 0)" max="100" />
                 <a v-if="! file.isUploading() && file.file.uploadingError" class="progress-icon" @click="file.retry()">
                   <b-icon icon="redo" type="is-danger" size="is-small" />
                 </a>
@@ -67,15 +67,13 @@ export default {
       paused: false,
       progressVisible: false,
       progress: 0,
+      trigger: false,
     }
   },
   computed: {
     activeUploads() {
-      for (var i = 0; i < this.resumable.files; i++) {
-        let file = this.resumable.files[i]
-        if (!file.isComplete()) {
-          return true
-        }
+      if (this.trigger || !this.trigger) {
+        return this.resumable.files.length > 0 && this.calcProgress() < 1
       }
       return false
     },
@@ -138,6 +136,7 @@ export default {
     this.resumable.assignDrop(document.getElementById('dropzone'))
 
     this.resumable.on('fileAdded', (file) => {
+      this.trigger = !this.trigger
       if (this.checkExistFile(file)) {
         this.$dialog.confirm({
         message: this.lang('File already exists', file.fileName),
@@ -158,6 +157,7 @@ export default {
     })
 
     this.resumable.on('fileSuccess', (file) => {
+      this.trigger = !this.trigger
       file.file.uploadingError = false
       this.$forceUpdate()
       if (this.can('read')) {
@@ -174,6 +174,7 @@ export default {
       }
     })
     this.resumable.on('fileError', (file) => {
+      this.trigger = !this.trigger
       file.file.uploadingError = true
     })
   },
@@ -239,6 +240,35 @@ export default {
         }
       }
       return false
+    },
+    checkUploadComplete() {
+      for (var i = 0; i < this.resumable.files.length; i++) {
+        let file = this.resumable.files[i]
+        if (!file.isComplete()) {
+          return false
+        }
+      }
+      return true
+    },
+    calcProgress() {
+      var totalDone = 0
+      var totalSize = 0
+      var notComplete = false
+      // Resume all chunks currently being uploaded
+      _.forEach(this.resumable.files, function(file){
+        if (file.size == 0) {
+          if (!file.isComplete()) {
+            notComplete = true
+          }
+        } else {
+          totalDone += file.progress()*file.size
+          totalSize += file.size
+        }
+      })
+      if (totalSize == totalDone && notComplete) {
+        return(totalSize>0 ? 0.99 : 0)
+      }
+      return(totalSize>0 ? totalDone/totalSize : 1)
     },
   },
 }
